@@ -17,7 +17,7 @@ router.post("/", async (req, res, next) => {
       `INSERT INTO fishes (name,type) VALUES ($1,$2) RETURNING *`,
       [req.body.name, req.body.type]
     );
-    return res.json(results);
+    return res.json(results.rows[0]);
   } catch (error) {
     return next(error);
   }

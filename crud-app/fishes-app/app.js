@@ -3,7 +3,9 @@ const app = express();
 const router = require("./routes/fishes");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+const cors = require("cors");
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
