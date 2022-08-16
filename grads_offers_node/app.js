@@ -3,11 +3,12 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const app = express();
 const router = require("./routes/grads");
-
+const offerRouter = require("./routes/offers");
 app.use(morgan("tiny"));
 app.use(bodyParser.json());
 
 app.use("/graduates", router);
+app.use("/graduates/:id/offers", offerRouter);
 
 app.use((req, res, next) => {
   let err = new Error("Not Found");

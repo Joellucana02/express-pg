@@ -3,7 +3,7 @@ const app = express();
 const router = express.Router({ mergeParams: true });
 const db = require("./../db");
 
-app.get("/graduates/:id/offers", async (req, res, next) => {
+app.get("/", async (req, res, next) => {
   try {
     const graduate = await db.query(`SELECT * FROM graduates WHERE id = ($1)`, [
       req.params.id,
@@ -19,7 +19,7 @@ app.get("/graduates/:id/offers", async (req, res, next) => {
   }
 });
 
-app.post("/graduates/:id/offers", async (req, res, next) => {
+app.post("/", async (req, res, next) => {
   try {
     const result = await db.query(
       `INSERT INTO offers (title, graduate_id) VALUES ($1,$2) RETURNING *`,
