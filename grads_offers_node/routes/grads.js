@@ -49,7 +49,7 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const deleteData = await db.query(
-      `DELETE FROM gratuades WHERE id = ($1) RETURNING *`,
+      `DELETE FROM graduates WHERE id = ($1) RETURNING *`,
       [req.params.id]
     );
     return res.json(deleteData.rows[0]);
