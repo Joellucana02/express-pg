@@ -3,9 +3,12 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const tagsRouter = require("./routes/tags");
-app.use(bodyParser.json());
-app.use(morgan("tiny"));
+const messagesRouter = require("./routes/messages");
 
+app.use(morgan("tiny"));
+app.use(bodyParser.json());
+
+app.use("/messages", messagesRouter);
 app.use("/tags", tagsRouter);
 
 app.get((req, res, next) => {

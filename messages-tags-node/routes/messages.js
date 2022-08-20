@@ -1,17 +1,14 @@
-const { json } = require("body-parser");
 const express = require("express");
 const router = express.Router();
 const db = require("./../db");
-
 router.get("/", async (req, res, next) => {
   try {
     const results = await db.query(
-      `SELECT m.id, m.text, t.name FROM message AS m JOIN message_tags AS mt ON mt.message_id = m.id JOIN tags AS t ON t.id = mt.tag_id ORDER BY m.id`
+      `SELECT m.id, m.text, t.name FROM messages AS m JOIN messages_tags AS mt ON mt.message_id = m.id JOIN tags AS t ON t.id = mt.tag_id ORDER BY m.id`
     );
     let startIdx = 0;
     let counter = 0;
     let messages = [];
-
     for (let i = 0; i < results.rows.length; i++) {
       let currentMsg = results.rows[i];
       if (startIdx != currentMsg.id) {
@@ -45,5 +42,7 @@ router.post("/", async (req, res, next) => {
     return next(error);
   }
 });
+
+/* Modify the GET /tags so that you show all the corresponding messages when you see all the tag. Add routes for updating and removing tags and messages */
 
 module.exports = router;
