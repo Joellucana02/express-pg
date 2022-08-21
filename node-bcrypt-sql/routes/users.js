@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const db = require("./../db");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const secret = "BEST PASSWORD EVER";
 
 router.get("/", async (req, res, next) => {
   try {
@@ -49,9 +52,25 @@ router.post("/login", async (req, res, next) => {
       return res.json({ message: "Password does not match" });
     }
 
-    return res.json({ message: "Logged in!" });
+    const token = jwt.sign({ username: user.rows[0].username }, secret, {
+      expiresIn: 60 * 60,
+    });
+
+    return res.json({ token });
   } catch (error) {
     return next(error);
+  }
+});
+
+router.get("/secret", (req, res, next) => {
+  try {
+    const authHeaderValue = req.headers.authorization;
+
+    const token = jwt.verify(authHeaderValue, secret);
+
+    return res.json({ message: "you made it!" });
+  } catch (error) {
+    return res.status(401).json({ message: "unauthorized" });
   }
 });
 
