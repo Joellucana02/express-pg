@@ -62,16 +62,48 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/secret", (req, res, next) => {
+function ensureLoggedIn(req, res, next) {
   try {
-    const authHeaderValue = req.headers.authorization;
-
+    const authHeaderValue = req.headers.authorization.split(" ")[1];
+    console.log(req.headers);
     const token = jwt.verify(authHeaderValue, secret);
+    return next();
+  } catch (error) {
+    return res.status(401).json({ message: "unauthorized" });
+  }
+}
 
+router.get("/secret", ensureLoggedIn, async (req, res, next) => {
+  try {
     return res.json({ message: "you made it!" });
   } catch (error) {
     return res.status(401).json({ message: "unauthorized" });
   }
 });
 
+function ensureCorrectUser(req, res, next) {
+  try {
+    const authHeaderValue = req.headers.authorization.split(" ")[1];
+
+    const token = jwt.verify(authHeaderValue, secret);
+
+    if (token.username === req.params.username) {
+      return next();
+    } else {
+      return res.status(401).json({ message: "unauthorized" });
+    }
+  } catch (error) {
+    return res.status(401).json({ message: "unauthorized" });
+  }
+}
+
+router.get("/:username", ensureCorrectUser, async (req, res, next) => {
+  try {
+    //    const user = await db.query(`SELECT * FROM users WHERE username = $1`,[req.params.username])
+    //  return res.json(user.rows[0])
+    return res.json({ message: "You made it!" });
+  } catch (error) {
+    return next(error);
+  }
+});
 module.exports = router;
